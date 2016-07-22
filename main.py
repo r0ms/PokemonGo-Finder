@@ -19,7 +19,6 @@ import threading
 import werkzeug.serving
 import pokemon_pb2
 import time
-import warnings
 from google.protobuf.internal import encoder
 from google.protobuf.message import DecodeError
 from s2sphere import *
@@ -27,6 +26,7 @@ from datetime import datetime
 from geopy.geocoders import GoogleV3
 from gpsoauth import perform_master_login, perform_oauth
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
+from geopy.distance import vincenty
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.adapters import ConnectionError
 from requests.models import InvalidURL
@@ -446,65 +446,19 @@ def get_args():
         "debug": False,
         "display_gym": False,
         "display_pokestop": False,
-        "do_not_notify": None,
         "host": "127.0.0.1",
         "ignore": None,
         "locale": "en",
-        "location": None,
-        "notify": None,
         "only": None,
         "onlylure": False,
-        "password": None,
         "port": 5000,
-        "pushbullet": None,
-        "step_limit": 4,
-        "username": None
-    }
-    
-    INTEGER_STR = "int"
-    BOOLEAN_STR = "bool"
-    STRING_STR = "str"
-    default_args_type = {
-        "DEBUG": BOOLEAN_STR,
-        "ampm_clock": BOOLEAN_STR,
-        "auth_service": STRING_STR,
-        "auto_refresh": INTEGER_STR,
-        "china": BOOLEAN_STR,
-        "debug": BOOLEAN_STR,
-        "display_gym": BOOLEAN_STR,
-        "display_pokestop": BOOLEAN_STR,
-        "do_not_notify": STRING_STR,
-        "host": STRING_STR,
-        "ignore": STRING_STR,
-        "locale": STRING_STR,
-        "location": STRING_STR,
-        "notify": STRING_STR,
-        "only": STRING_STR,
-        "onlylure": BOOLEAN_STR,
-        "password": STRING_STR,
-        "port": INTEGER_STR,
-        "pushbullet": STRING_STR,
-        "step_limit": INTEGER_STR,
-        "username": STRING_STR
+        "step_limit": 4
     }
     # load config file
     with open('config.json') as data_file:
         data = json.load(data_file)
         for key in data:
-            if key not in default_args_type:
-                warnings.warn( 'Config Item ' + key + 'Does Not Have a Default Type' )
-                
-            if default_args_type[key] == INTEGER_STR:
-                default_args[key] = int(data[key])
-                
-            elif default_args_type[key] == BOOLEAN_STR:
-                default_args[key] = data[key]
-                
-            else:
-                if default_args_type[key] != STRING_STR:
-                    warnings.warn( 'Unsupported Default Args Type' )
-            
-                default_args[key] = str(data[key])
+            default_args[key] = str(data[key])
         # create namespace obj
         namespace = argparse.Namespace()
         for key in default_args:
@@ -648,6 +602,7 @@ def process_step(args, api_endpoint, access_token, profile_response,
     h = get_heartbeat(args.auth_service, api_endpoint, access_token,
                       profile_response)
     hs = [h]
+
     seen = set([])
 
     for child in parent.children():
@@ -709,13 +664,14 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
                 transform_from_wgs_to_gcj(Location(poke.Latitude,
                     poke.Longitude))
 
-
+        distance = int(vincenty((origin_lat, origin_lon), (poke.Latitude, poke.Longitude)).meters)
         pokemon_obj = {
             "lat": poke.Latitude,
             "lng": poke.Longitude,
             "disappear_time": disappear_timestamp,
             "id": poke.pokemon.PokemonId,
-            "name": pokename
+            "name": pokename,
+            "distance" : distance
         }
 
         if poke.SpawnPointId not in pokemons:
