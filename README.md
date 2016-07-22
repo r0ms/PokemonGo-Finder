@@ -28,4 +28,4 @@ Install the necessary dependencies (including the Pushbullet client) by running 
 *Using this software is against the ToS and can get you banned. Use at your own risk.*
 
 ## Notifications
-You'll have to set up notifications where you'd like to receive them. I installed the [Pushbullet Chrome Extension](https://chrome.google.com/webstore/detail/pushbullet/chlffgpmiacpedhhbkiomidkjlcfhogd?hl=en) and then decided that I found more utility by installing the Pushbullet iPhone app and receiving the notifications on my phone.
+You'll have to create a incomming webhook in your Slack team settings. Get the Url and paste it in the config file. You're set !
