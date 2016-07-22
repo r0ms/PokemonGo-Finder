@@ -42,7 +42,7 @@ def pokemon_found(pokemon):
     thumb_url = "https://img.pokemondb.net/artwork/"+_str(pokemon["name"]).lower()+".jpg"
     slack_payload = {"attachments" : [{"thumb_url" : thumb_url, "text" : "A wild "+_str(pokemon["name"])+" appeared!", "fields" : [{"title" : "Distance", "value" : str(pokemon["distance"]) +" meters", "short":1}, {"title" : "Available until", "value" : disappear_time, "short":1},{"title" : "Location", "value" : " Click <https://maps.google.com/?saddr="+str(origin_lat)+","+str(origin_lng)+"&daddr="+str(pokemon["lat"])+","+str(pokemon["lng"])+"|here> for directions", "short":0}]}]}
     print(slack_payload);
-    r = requests.post(slackUrl, json=slack_payload);
+    r = requests.post(webhookUrl, json=slack_payload);
     print(r.status_code)
 
 init()
