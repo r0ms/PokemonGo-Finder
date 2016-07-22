@@ -1,13 +1,10 @@
 # Pokemon Go Notification System
 
-This is a fork of [the popular PokemonGo-Map repository](https://github.com/AHAAAAAAA/PokemonGo-Map) with the purpose of allowing users to search for specific Pokemon without having to constantly monitor the map of nearby Pokemon. This allows users to set a list of sought-after Pokemon and receive notifications through [Pushbullet](https://www.pushbullet.com/). All API and map functionality was left untouched.
+This is a fork of [the popular PokemonGo-Map repository](https://github.com/AHAAAAAAA/PokemonGo-Map) with the purpose of allowing users to search for specific Pokemon without having to constantly monitor the map of nearby Pokemon. It's team minded, because this allow you and your team to efficiently track Pokémon that spawn near your work location and go hunting during lunch break ;) . All API and map functionality was left untouched.
 
-## Configure PushBullet
-To generate a token for sending yourself notifications using the Pushbullet API, create an account on [Pushbullet](https://www.pushbullet.com/). Then click your avatar and select the "My Account" page. Scroll to where you see "Access Tokens" and click the "Create Access Token" button. Copy this hash, you'll need it later.
 
 ## Config File
-Instead of from the command-line, all arguments are read from a `config.json` file. In addition to all of the options laid out [here](https://github.com/AHAAAAAAA/PokemonGo-Map/wiki/Usage), I've introduced two required fields: `pushbullet`, your Pushbullet API key, and `notify`, a comma-separated list of the Pokemon that you'd like to receive Pushbullet notifications for.
-
+Instead of from the command-line, all arguments are read from a `config.json` file. In addition to all of the options laid out [here](https://github.com/AHAAAAAAA/PokemonGo-Map/wiki/Usage), I've introduced three required fields: `slackWebhook` to obviously join a channel on Slack and latitude and longitude to calculate the distance between you and the Pokémon.
 Here's a sample `config.json`:
 
 ```
@@ -16,9 +13,11 @@ Here's a sample `config.json`:
   "username": "myemailuser",
   "password": "pikachu123",
   "step_limit": 5,
-  "location": "742 Evergreen Terrace, Arlington, VA",
+  "location": "30, rue de la Victoire, Paris",
+  "latitude" : 48.875418,
+  "longitude": 2.338118,
   "notify": "dratini,magnemite,electabuzz,hitmonchan,hitmonlee,chansey,lapras,snorlax,porygon,mew,mewtwo,moltres,zapdos,articuno,ditto,seel,gyarados,cubone",
-  "pushbullet": "o.XyDeiVeYuM5eSv2ssy7AlFGLDl4ajEXj"
+  "slackWebhook" : "https://hooks.slack.com/services/youslackwebhook"
 }
 ```
 
@@ -30,11 +29,3 @@ Install the necessary dependencies (including the Pushbullet client) by running 
 
 ## Notifications
 You'll have to set up notifications where you'd like to receive them. I installed the [Pushbullet Chrome Extension](https://chrome.google.com/webstore/detail/pushbullet/chlffgpmiacpedhhbkiomidkjlcfhogd?hl=en) and then decided that I found more utility by installing the Pushbullet iPhone app and receiving the notifications on my phone.
-
-## Screenshots
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/jxmorris12/PokemonGo-Finder/master/screenshots/PhonePushNotif.PNG" height="500">
-<img src="https://raw.githubusercontent.com/jxmorris12/PokemonGo-Finder/master/screenshots/ChromePushNotif.png" width="400">
-<img src="https://raw.githubusercontent.com/AHAAAAAAA/PokemonGo-Map/master/static/cover.png">
-</p>
